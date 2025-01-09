@@ -13,14 +13,13 @@ import { signIn, useSession } from 'next-auth/react'
 
 type Variant = 'LOGIN' | 'REGISTER'
 const AuthForm = () => {
-  const session = useSession() // use Session check user login nextauth.
+  const session = useSession() // use Session check user login nextauth (Clientside).
   const router = useRouter() // use Router for navigation.
   const [variant, setVariant] = useState<Variant>('LOGIN')
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (session?.status === 'authenticated') {
-      console.log('Authenticated')
       router.push('/users')
     }
   }, [session?.status])

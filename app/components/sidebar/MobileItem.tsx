@@ -1,3 +1,4 @@
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import clsx from 'clsx'
 import Link from 'next/link'
 
