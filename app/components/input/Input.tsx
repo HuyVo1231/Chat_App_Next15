@@ -6,12 +6,22 @@ interface InputProps {
   id: string
   type?: string
   required?: { value: boolean; message: string }
+  minLength?: { value: number; message: string }
   register: UseFormRegister<FieldValues>
   errors: FieldErrors
   disabled?: boolean
 }
 
-const Input: React.FC<InputProps> = ({ label, id, type = 'text', required, register, errors, disabled }) => {
+const Input: React.FC<InputProps> = ({
+  label,
+  id,
+  type = 'text',
+  required,
+  minLength,
+  register,
+  errors,
+  disabled
+}) => {
   return (
     <div>
       <label htmlFor={id} className='block text-sm font-medium leading-6 text-gray-900'>
@@ -23,7 +33,7 @@ const Input: React.FC<InputProps> = ({ label, id, type = 'text', required, regis
           id={id}
           disabled={disabled}
           autoComplete={id}
-          {...register(id, { required })}
+          {...register(id, { required, minLength })}
           className={clsx(
             `form-input
             block
@@ -39,7 +49,7 @@ const Input: React.FC<InputProps> = ({ label, id, type = 'text', required, regis
             placeholder:text-gray-400
             focus:ring-2
             focus:ring-inset
-            focus:ring-sky-600
+            focus:ring-green-600
             sm:text-sm
             sm:leading-6`,
             errors[id] && 'ring-rose-500 border-rose-500',
@@ -48,7 +58,9 @@ const Input: React.FC<InputProps> = ({ label, id, type = 'text', required, regis
         />
       </div>
       {errors[id] && (
-        <p className='mt-1 font-medium text-rose-500'>{(errors[id]?.message as string) || 'This field is required'}</p>
+        <p className='mt-1 font-medium text-rose-500'>
+          {(errors[id]?.message as string) || 'This field is required'}
+        </p>
       )}
     </div>
   )

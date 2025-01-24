@@ -1,6 +1,5 @@
 'use client'
 
-import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import Input from '@/app/components/input/Input'
@@ -10,6 +9,7 @@ import { BsGithub, BsGoogle } from 'react-icons/bs'
 import { toast } from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import { signIn, useSession } from 'next-auth/react'
+import { fetcher } from '@/app/libs/fetcher'
 
 type Variant = 'LOGIN' | 'REGISTER'
 const AuthForm = () => {
@@ -42,39 +42,32 @@ const AuthForm = () => {
     }
   })
 
-  // Register/Login
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setLoading(true)
 
-    if (variant === 'REGISTER') {
-      axios
-        .post('/api/register', data)
-        .then((response) => {
-          const message = response.data.message || 'Đăng ký tài khoản thành công!'
-          toast.success(message)
-          signIn('credentials', data)
+    try {
+      if (variant === 'REGISTER') {
+        const responseData = await fetcher('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
         })
-        .catch((error) => {
-          const errorMessage = error.response?.data?.message || 'Đăng ký tài khoản thất bại!'
-          toast.error(errorMessage)
-        })
-        .finally(() => {
-          setLoading(false)
-        })
-    }
-    if (variant === 'LOGIN') {
-      signIn('credentials', {
-        ...data,
-        redirect: false
-      }).then((callback) => {
-        if (callback?.error) {
-          toast.error('Không đúng thông tin xác thực')
+
+        toast.success(responseData.message || 'Đăng ký tài khoản thành công!')
+        await signIn('credentials', data)
+      } else if (variant === 'LOGIN') {
+        const result = await signIn('credentials', { ...data, redirect: false })
+
+        if (result?.error) {
+          throw new Error('Sai tài khoản hoặc mật khẩu...')
         }
 
-        if (callback?.ok && !callback?.error) {
-          toast.success('Đăng nhập thành công!')
-        }
-      })
+        toast.success('Đăng nhập thành công!')
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'Có lỗi xảy ra')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -127,7 +120,14 @@ const AuthForm = () => {
             register={register}
             errors={errors}
             disabled={loading}
-            required={{ value: true, message: 'Password is required' }}
+            required={{
+              value: true,
+              message: 'Password is required'
+            }}
+            minLength={{
+              value: 6,
+              message: 'Password must be at least 6 characters'
+            }}
           />
           <div>
             <Button disabled={loading} fullWidth type='submit'>

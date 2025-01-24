@@ -1,3 +1,4 @@
+import getUsers from '../actions/users/getUsers'
 import EmptyState from '../components/emptystate/EmptyState'
 
 const Users = () => {

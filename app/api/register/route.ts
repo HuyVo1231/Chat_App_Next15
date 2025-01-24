@@ -9,7 +9,10 @@ export async function POST(request: Request) {
 
     // Check if required fields are provided
     if (!email || !name || !password) {
-      return NextResponse.json({ message: 'Vui lòng điền đầy đủ thông tin.', status: 400 }, { status: 400 })
+      return NextResponse.json(
+        { message: 'Vui lòng điền đầy đủ thông tin.', status: 400 },
+        { status: 400 }
+      )
     }
 
     // Check if the user already exists
@@ -33,7 +36,10 @@ export async function POST(request: Request) {
       }
     })
 
-    return NextResponse.json({ message: 'Đăng ký tài khoản thành công', status: 201 }, { status: 201 })
+    return NextResponse.json(
+      { message: 'Đăng ký tài khoản thành công', status: 201 },
+      { status: 201 }
+    )
   } catch (error: any) {
     console.error('REGISTRATION ERROR', error)
     return NextResponse.json({ message: 'Lỗi internal của server', status: 500 }, { status: 500 })
