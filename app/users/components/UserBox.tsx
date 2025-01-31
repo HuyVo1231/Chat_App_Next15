@@ -1,6 +1,7 @@
 'use client'
 
 import Avatar from '@/app/components/avatar/Avatar'
+import Loading from '@/app/components/loading/Loading'
 import { fetcher } from '@/app/libs/fetcher'
 import { User } from '@prisma/client'
 import { useRouter } from 'next/navigation'
@@ -39,17 +40,20 @@ const UserBox: React.FC<UserBoxProps> = ({ user }) => {
   }, [router, user])
 
   return (
-    <div
-      onClick={handleClick}
-      className='w-full flex items-center space-x-3 bg-white p-3 hover:bg-neutral-100
-        rounded-lg transition cursor-pointer'>
-      <Avatar user={user} />
-      <div className='min-w-0 flex-1'>
-        <div className='flex justify-between items-center mb-1'>
-          <p className='text-sm font-medium text-gray-900'>{user?.name}</p>
+    <>
+      {isLoading && <Loading />}
+      <div
+        onClick={handleClick}
+        className='w-full flex items-center space-x-3 bg-white p-3 hover:bg-neutral-100
+          rounded-lg transition cursor-pointer'>
+        <Avatar user={user} />
+        <div className='min-w-0 flex-1'>
+          <div className='flex justify-between items-center mb-1'>
+            <p className='text-sm font-medium text-gray-900'>{user?.name}</p>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

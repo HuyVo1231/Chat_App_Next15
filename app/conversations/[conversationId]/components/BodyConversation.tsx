@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from 'react'
 import MessageBox from './MessageBox'
 import { useSession } from 'next-auth/react'
 import { fetcher } from '@/app/libs/fetcher'
+import { pusherClient } from '@/app/libs/pusher'
+import find from 'lodash/find'
 
 interface BodyConversationProps {
   initialMessages: FullMessageType[]
@@ -40,6 +42,40 @@ const BodyConversation: React.FC<BodyConversationProps> = ({ initialMessages }) 
       } catch (error) {}
     }
     markAsSeen()
+  }, [conversationId, messages])
+
+  // Realtime messages
+  useEffect(() => {
+    pusherClient.subscribe(conversationId)
+
+    const getNewMessage = (message: FullMessageType) => {
+      setMessages((prevMessages) => {
+        if (find(prevMessages, { id: message.id })) {
+          return prevMessages
+        }
+        return [...prevMessages, message]
+      })
+    }
+
+    const updateMessage = (newMessage: FullMessageType) => {
+      setMessages((prevMessage) =>
+        prevMessage.map((currentMessage) => {
+          if (currentMessage.id === newMessage.id) {
+            return newMessage
+          }
+          return currentMessage
+        })
+      )
+    }
+
+    pusherClient.bind('newMessage', getNewMessage)
+    pusherClient.bind('updateMessage', updateMessage)
+
+    return () => {
+      pusherClient.unsubscribe(conversationId)
+      pusherClient.unbind('newMessage', getNewMessage)
+      pusherClient.unbind('updateMessage', updateMessage)
+    }
   }, [conversationId])
 
   return (

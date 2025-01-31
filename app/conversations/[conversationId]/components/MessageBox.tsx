@@ -6,6 +6,8 @@ import { useSession } from 'next-auth/react'
 import { FullMessageType } from '@/app/types'
 import Avatar from '@/app/components/avatar/Avatar'
 import Image from 'next/image'
+import { useState } from 'react'
+import ImageModal from './ImageModal'
 
 interface MessageBoxProps {
   isLast?: boolean
@@ -14,6 +16,7 @@ interface MessageBoxProps {
 
 const MessageBox: React.FC<MessageBoxProps> = ({ isLast, message }) => {
   const { data: session, status } = useSession()
+  const [imageModalOpen, setImageModalOpen] = useState(false)
 
   const yourMessage = session?.user?.email === message.sender.email
 
@@ -56,8 +59,14 @@ const MessageBox: React.FC<MessageBoxProps> = ({ isLast, message }) => {
             yourMessage ? 'bg-green-500 text-white' : 'bg-gray-100',
             message.image ? 'rounded-md p-0' : 'rounded-full py-2 px-3'
           )}>
+          <ImageModal
+            src={message.image}
+            isOpen={imageModalOpen}
+            onClose={() => setImageModalOpen(false)}
+          />
           {message?.image ? (
             <Image
+              onClick={() => setImageModalOpen(true)}
               alt='Image'
               height={250}
               width={250}
