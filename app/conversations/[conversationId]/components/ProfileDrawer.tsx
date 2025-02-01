@@ -9,6 +9,7 @@ import Avatar from '@/app/components/avatar/Avatar'
 import { useMemo, useState } from 'react'
 import ConfirmModal from './ConfirmModal'
 import AvatarGroup from '@/app/components/avatar/AvatarGroup'
+import activeUsersStore from '@/app/zustand/activeUsers'
 
 interface ProfileDrawerProps {
   data: Omit<FullConversationType, 'messages'>
@@ -17,8 +18,10 @@ interface ProfileDrawerProps {
 }
 
 const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ data, isOpen, onClose }) => {
-  const otherUser = useOtherUser(data)
   const [confirmModal, setConfirmModal] = useState(false)
+  const otherUser = useOtherUser(data)
+  const { listActiveUser } = activeUsersStore()
+  const isActive = listActiveUser.indexOf(otherUser?.email) !== -1
 
   const createdDate = useMemo(() => {
     return format(new Date(otherUser.createdAt), 'dd/MM/yyyy')
@@ -30,8 +33,8 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ data, isOpen, onClose }) 
 
   const isGroup = useMemo(() => {
     if (data.isGroup) return `${data.users.length} members`
-    return 'Active'
-  }, [data])
+    return isActive ? 'Active' : 'Offline'
+  }, [data, isActive])
 
   return (
     <>

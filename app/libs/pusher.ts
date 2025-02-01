@@ -10,7 +10,13 @@ const pusherServer = new PusherServer({
 })
 
 const pusherClient = new PusherClient(process.env.NEXT_PUBLIC_PUSHER_APP_KEY!, {
-  cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER
+  cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+  authEndpoint: '/api/pusher',
+  auth: {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  }
 })
 
 export { pusherClient, pusherServer }
