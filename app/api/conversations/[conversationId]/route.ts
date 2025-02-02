@@ -1,14 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import getCurrentUser from '@/app/actions/users/getCurrentUser'
 import prisma from '@/app/libs/prismadb'
 import { pusherServer } from '@/app/libs/pusher'
 
 export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { conversationId: string } }
+  request: Request,
+  { params }: { params: Promise<{ conversationId: string }> }
 ) {
   try {
-    const { conversationId } = params
+    const { conversationId } = await params
 
     const currentUser = await getCurrentUser()
 
@@ -35,9 +35,7 @@ export async function DELETE(
     })
 
     existingConversation.users.forEach((user) => {
-      if (user.email) {
-        pusherServer.trigger(user.email, 'deleteConversation', existingConversation)
-      }
+      pusherServer.trigger(user.email!, 'deleteConversation', existingConversation)
     })
 
     return NextResponse.json(deletedConversation)

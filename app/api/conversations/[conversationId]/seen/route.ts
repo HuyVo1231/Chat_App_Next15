@@ -1,14 +1,14 @@
 import getCurrentUser from '@/app/actions/users/getCurrentUser'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import prisma from '@/app/libs/prismadb'
 import { pusherServer } from '@/app/libs/pusher'
 
 export async function POST(
-  request: NextRequest,
-  { params }: { params: { conversationId: string } }
+  request: Request,
+  { params }: { params: Promise<{ conversationId: string }> }
 ) {
   try {
-    const { conversationId } = params
+    const { conversationId } = await params
 
     const currentUser = await getCurrentUser()
 
