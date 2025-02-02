@@ -9,7 +9,7 @@ interface IParams {
 
 export async function DELETE(request: Request, { params }: { params: IParams }) {
   try {
-    const { conversationId } = await params
+    const { conversationId } = params
     const currentUser = await getCurrentUser()
     if (!currentUser?.id) {
       return new NextResponse('Chưa xác thực', { status: 401 })
