@@ -3,13 +3,10 @@ import { NextResponse } from 'next/server'
 import prisma from '@/app/libs/prismadb'
 import { pusherServer } from '@/app/libs/pusher'
 
-interface IParams {
-  conversationId: string
-}
-
-export async function POST(request: Request, { params }: { params: IParams }) {
+export async function POST(request: Request) {
   try {
-    const { conversationId } = await params
+    const { conversationId } = await request.json()
+
     const currentUser = await getCurrentUser()
 
     if (!currentUser?.id || !currentUser?.email) {

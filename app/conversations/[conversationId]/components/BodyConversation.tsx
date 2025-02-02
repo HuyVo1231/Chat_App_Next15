@@ -37,7 +37,8 @@ const BodyConversation: React.FC<BodyConversationProps> = ({ initialMessages }) 
       try {
         await fetcher(`/api/conversations/${conversationId}/seen`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ conversationId })
         })
       } catch (error) {
         console.error(error)
