@@ -3,14 +3,15 @@ import getCurrentUser from '@/app/actions/users/getCurrentUser'
 import prisma from '@/app/libs/prismadb'
 import { pusherServer } from '@/app/libs/pusher'
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: { [key: string]: string | string[] } }
-) {
+export async function DELETE(request: Request, context: { params: { conversationId: string } }) {
   try {
-    const { conversationId } = params
-    const currentUser = await getCurrentUser()
+    const { params } = context
+    const conversationId = params?.conversationId
+    if (!conversationId) {
+      return new NextResponse('Thiếu conversationId', { status: 400 })
+    }
 
+    const currentUser = await getCurrentUser()
     if (!currentUser?.id) {
       return new NextResponse('Chưa xác thực', { status: 401 })
     }
@@ -27,21 +28,21 @@ export async function DELETE(
     const deletedConversation = await prisma.conversation.deleteMany({
       where: {
         id: conversationId,
-        userIds: {
-          hasSome: [currentUser.id]
-        }
+        userIds: { hasSome: [currentUser.id] }
       }
     })
 
     existingConversation.users.forEach((user) => {
-      pusherServer.trigger(user.email!, 'deleteConversation', existingConversation)
+      if (user.email) {
+        pusherServer.trigger(user.email, 'deleteConversation', existingConversation)
+      }
     })
 
     return NextResponse.json(deletedConversation)
   } catch (error) {
     console.error('ERROR_CONVERSATION_DELETE', error)
     return NextResponse.json(
-      { message: 'Lỗi internal của server DELETE CONVERSATION', status: 500 },
+      { message: 'Lỗi internal của server DELETE CONVERSATION' },
       { status: 500 }
     )
   }
