@@ -3,9 +3,9 @@ import { NextResponse } from 'next/server'
 import prisma from '@/app/libs/prismadb'
 import { pusherServer } from '@/app/libs/pusher'
 
-export async function POST(request: Request) {
+export async function POST(request: Request, { params }: { params: { conversationId: string } }) {
   try {
-    const { conversationId } = await request.json()
+    const { conversationId } = params
 
     const currentUser = await getCurrentUser()
 
@@ -57,6 +57,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(updatedMessage)
   } catch (error) {
+    // Nếu có lỗi xảy ra trên server, trả về lỗi
     return new NextResponse(`Lỗi ở server: ${error.message || error}`, { status: 500 })
   }
 }

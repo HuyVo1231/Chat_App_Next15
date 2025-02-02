@@ -3,9 +3,9 @@ import getCurrentUser from '@/app/actions/users/getCurrentUser'
 import prisma from '@/app/libs/prismadb'
 import { pusherServer } from '@/app/libs/pusher'
 
-export async function DELETE(request: Request) {
+export async function DELETE(request: Request, { params }: { params: { conversationId: string } }) {
   try {
-    const { conversationId } = await request.json()
+    const { conversationId } = params
 
     const currentUser = await getCurrentUser()
 
