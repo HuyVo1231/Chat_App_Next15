@@ -1,16 +1,16 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import getCurrentUser from '@/app/actions/users/getCurrentUser'
 import prisma from '@/app/libs/prismadb'
 import { pusherServer } from '@/app/libs/pusher'
 
-interface IParams {
-  conversationId: string
-}
-
-export async function DELETE(request: Request, { params }: { params: IParams }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { conversationId: string } }
+) {
   try {
-    const { conversationId } = params // Params đã tự được Next.js cung cấp
+    const { conversationId } = params
     const currentUser = await getCurrentUser()
+
     if (!currentUser?.id) {
       return new NextResponse('Chưa xác thực', { status: 401 })
     }

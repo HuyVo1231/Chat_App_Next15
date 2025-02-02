@@ -19,17 +19,14 @@ const UseActiveUsers = () => {
       members.each((member) => {
         listUser.push(member.id)
       })
-      console.log('Danh sách người dùng online:', listUser)
       setActiveList(listUser)
     })
 
     channel.bind('pusher:member_added', (member) => {
-      console.log('Người dùng thêm vào:', member)
       addUser(member.id)
     })
 
     channel.bind('pusher:member_removed', (member) => {
-      console.log('Người dùng bị xóa:', member)
       removeUser(member.id)
     })
 
