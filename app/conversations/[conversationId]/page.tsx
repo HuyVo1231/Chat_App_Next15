@@ -4,12 +4,10 @@ import HeaderConversation from './components/HeaderConversation'
 import BodyConversation from './components/BodyConversation'
 import FormSendMessage from './components/FormSendMessage'
 
-interface IParams {
-  conversationId: string
-}
+type Params = Promise<{ conversationId: string }>
 
-const ConversationId = async ({ params }: { params: IParams }) => {
-  const { conversationId } = await params
+const ConversationId = async (props: { params: Params }) => {
+  const { conversationId } = await props.params
   const conversation = await getConversationByID(conversationId)
   const messages = conversation?.messages
 
