@@ -26,7 +26,8 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose }) => {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({ conversationId })
       })
       toast.success('Successfully deleted conversation')
       onClose()
