@@ -6,7 +6,6 @@ import { pusherClient } from '../libs/pusher'
 const UseActiveUsers = () => {
   const { listActiveUser, addUser, removeUser, setActiveList } = activeUsersStore()
   const [activeChannel, setActiveChannel] = useState<Channel | null>(null)
-
   useEffect(() => {
     let channel = activeChannel
     if (!channel) {
