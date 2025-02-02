@@ -4,7 +4,6 @@ import Button from '@/app/components/button/Button'
 import Modal from '@/app/components/modal/Modal'
 import useConversation from '@/app/hooks/useConversation'
 import { fetcher } from '@/app/libs/fetcher'
-import { DialogTitle } from '@headlessui/react'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -23,7 +22,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose }) => {
     setIsLoading(true)
 
     try {
-      const res = await fetcher(`/api/conversations/${conversationId}`, {
+      await fetcher(`/api/conversations/${conversationId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
@@ -33,7 +32,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose }) => {
       onClose()
       router.push('/conversations')
       router.refresh()
-    } catch (error: any) {
+    } catch (error) {
       toast.error(error.message || 'Có lỗi xảy ra')
     } finally {
       setIsLoading(false)

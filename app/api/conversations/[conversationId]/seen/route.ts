@@ -59,7 +59,7 @@ export async function POST(request: Request, { params }: { params: IParams }) {
     await pusherServer.trigger(conversationId, 'updateMessage', updatedMessage)
 
     return NextResponse.json(updatedMessage)
-  } catch (error: any) {
+  } catch (error) {
     return new NextResponse(`Lỗi ở server: ${error.message || error}`, { status: 500 })
   }
 }

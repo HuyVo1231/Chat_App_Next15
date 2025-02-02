@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       { message: 'Đăng ký tài khoản thành công', status: 201 },
       { status: 201 }
     )
-  } catch (error: any) {
+  } catch (error) {
     console.error('REGISTRATION ERROR', error)
     return NextResponse.json({ message: 'Lỗi internal của server', status: 500 }, { status: 500 })
   }

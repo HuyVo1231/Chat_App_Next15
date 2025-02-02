@@ -49,7 +49,7 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({ isOpen, onClose, users 
     }
 
     try {
-      const res = await fetcher('/api/conversations', {
+      await fetcher('/api/conversations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -59,7 +59,7 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({ isOpen, onClose, users 
       toast.success('Create group chat successfully')
       router.refresh()
       onClose()
-    } catch (error: any) {
+    } catch (error) {
       toast.error(error.message || 'Có lỗi xảy ra')
     } finally {
       setIsLoading(false)

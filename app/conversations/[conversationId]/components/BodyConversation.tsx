@@ -39,7 +39,9 @@ const BodyConversation: React.FC<BodyConversationProps> = ({ initialMessages }) 
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
         })
-      } catch (error) {}
+      } catch (error) {
+        console.error(error)
+      }
     }
     markAsSeen()
   }, [conversationId, messages])

@@ -38,7 +38,7 @@ export async function DELETE(request: Request, { params }: { params: IParams }) 
     })
 
     return NextResponse.json(deletedConversation)
-  } catch (error: any) {
+  } catch (error) {
     console.error('ERROR_CONVERSATION_DELETE', error)
     return NextResponse.json(
       { message: 'Lỗi internal của server DELETE CONVERSATION', status: 500 },

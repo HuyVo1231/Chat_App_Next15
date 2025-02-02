@@ -10,6 +10,7 @@ interface SelectProps {
   disabled?: boolean
   label: string
   value?: SelectValueProps[]
+  // eslint-disable-next-line no-unused-vars
   onChange: (value: SelectValueProps[] | null) => void
   options?: SelectValueProps[]
 }

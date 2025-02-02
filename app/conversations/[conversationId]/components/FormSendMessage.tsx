@@ -41,7 +41,7 @@ const FormSendMessage = () => {
     }
   }
 
-  const handleUpload = async (result: any) => {
+  const handleUpload = async (result) => {
     if (result && result.info) {
       setIsLoading(true)
 

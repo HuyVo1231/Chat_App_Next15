@@ -28,7 +28,8 @@ const getConversationByID = async (conversationId: string): Promise<FullConversa
       }
     })
     return conversation
-  } catch (error: any) {
+  } catch (error) {
+    console.error(error)
     return null
   }
 }

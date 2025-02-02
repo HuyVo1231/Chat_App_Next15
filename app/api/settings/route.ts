@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     })
 
     return NextResponse.json(updatedUser)
-  } catch (error: any) {
+  } catch (error) {
     console.error('CHANGE INFO ERROR', error)
     return NextResponse.json({ message: 'Lỗi internal của server', status: 500 }, { status: 500 })
   }

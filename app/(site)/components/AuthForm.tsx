@@ -64,7 +64,7 @@ const AuthForm = () => {
 
         toast.success('Đăng nhập thành công!')
       }
-    } catch (error: any) {
+    } catch (error) {
       toast.error(error.message || 'Có lỗi xảy ra')
     } finally {
       setLoading(false)

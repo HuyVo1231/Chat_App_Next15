@@ -32,7 +32,7 @@ const UserBox: React.FC<UserBoxProps> = ({ user }) => {
       } else {
         toast.error('Không tìm thấy cuộc trò chuyện.')
       }
-    } catch (error: any) {
+    } catch (error) {
       toast.error(error.message || 'Có lỗi xảy ra')
     } finally {
       setIsLoading(false)

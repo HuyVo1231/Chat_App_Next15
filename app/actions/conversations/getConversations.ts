@@ -28,6 +28,7 @@ const getConversations = async () => {
     })
     return conversations || []
   } catch (error) {
+    console.error(error)
     return []
   }
 }

@@ -1,7 +1,6 @@
 'use client'
 import { User } from '@prisma/client'
 import Modal from '../modal/Modal'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import { fetcher } from '@/app/libs/fetcher'
@@ -18,7 +17,6 @@ interface SettingModalProps {
 }
 
 const SettingModal: React.FC<SettingModalProps> = ({ isOpen, onClose, currentUser }) => {
-  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
   // React Hook Form
@@ -37,7 +35,7 @@ const SettingModal: React.FC<SettingModalProps> = ({ isOpen, onClose, currentUse
 
   const image = watch('image')
 
-  const handleUpload = async (result: any) => {
+  const handleUpload = async (result) => {
     if (result && result.info) {
       const uploadedImageUrl = result.info.secure_url
       setValue('image', uploadedImageUrl, { shouldValidate: true })
@@ -51,7 +49,7 @@ const SettingModal: React.FC<SettingModalProps> = ({ isOpen, onClose, currentUse
     }
     try {
       setValue('image', '', { shouldValidate: true })
-      const response = await fetcher('/api/settings', {
+      await fetcher('/api/settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
