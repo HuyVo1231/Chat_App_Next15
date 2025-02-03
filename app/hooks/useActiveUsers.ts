@@ -1,12 +1,17 @@
 import { Channel } from 'pusher-js'
-import activeUsersStore from '../zustand/activeUsers'
 import { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
+import activeUsersStore from '../zustand/activeUsers'
 import { pusherClient } from '../libs/pusher'
 
 const UseActiveUsers = () => {
+  const { data: session } = useSession()
   const { listActiveUser, addUser, removeUser, setActiveList } = activeUsersStore()
   const [activeChannel, setActiveChannel] = useState<Channel | null>(null)
+
   useEffect(() => {
+    if (!session?.user) return
+
     let channel = activeChannel
     if (!channel) {
       channel = pusherClient.subscribe('presence-online-users')
@@ -35,7 +40,9 @@ const UseActiveUsers = () => {
         setActiveChannel(null)
       }
     }
-  }, [activeChannel, setActiveList, addUser, removeUser])
+  }, [session?.user, activeChannel, setActiveList, addUser, removeUser])
+
+  return null
 }
 
 export default UseActiveUsers
